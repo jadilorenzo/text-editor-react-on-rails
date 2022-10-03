@@ -1,16 +1,24 @@
 module.exports = {
   root: true,
-  parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
-  extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-  ],
+  env: {
+    es6: true,
+  },
   settings: {
     react: {
-      version: 'detect'
-    }
-  }
-}
+      version: "detect",
+    },
+  },
+  extends: ["airbnb"],
+  parser: "babel-eslint",
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2021,
+  },
+  rules: {
+    // No semicolons
+    semi: ["error", "never"],
+    'no-restricted-imports': ['error', 'never']
+  },
+};
