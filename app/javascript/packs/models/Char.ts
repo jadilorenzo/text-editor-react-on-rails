@@ -1,8 +1,8 @@
 export default class Char {
-  constructor({ text, type = '' }) {
+  constructor({ text, type = 'none' }) {
     this.text = text
     this.type = type
   }
   text: string
-  type: string = 'none'
+  type: string
 }
