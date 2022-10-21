@@ -1,11 +1,17 @@
-import Char from './Char'
-import Eof from './Eof'
-import Eol from './Eol'
+import Character from './Character'
+import EndOfFile from './EndOfFile'
+import EndOfLine from './EndOfLine'
+import { insert } from './utils'
 
-export type Element = Eof | Eol | Char
+export type Element = EndOfFile | EndOfLine | Character
+
+export interface Position {
+  x: number;
+  y: number;
+}
 
 export default class Document {
-  position: { x: number, y: number } = { x: 0, y: 0 }
+  position: Position = { x: 0, y: 0 }
   document: Element[] = []
 
   // breaks document into arrays of same type in
@@ -53,21 +59,81 @@ export default class Document {
     return this.documentSplitByParagraphs.map(paragraph => paragraph.length)
   }
 
-  _createChar({ text, type }: { text: string, type: string }): Char {
-    return new Char({ text, type })
+  _createCharacter({ text, type = 'none' }: { text: string, type?: string }): Character {
+    return new Character({ text, type })
   }
 
-  _createEof(): Eof {
-    return new Eof()
+  _createEndOfFile(): EndOfFile {
+    return new EndOfFile()
   }
 
-  _checkForEof(): this {
-    this.document = this.document.filter(char => !(char.type === 'EOF'))
-    this.document = [...this.document, this._createEof()]
+  _createEndOfLine(): EndOfLine {
+    return new EndOfLine()
+  }
+
+  _handleEndOfFileCharacter(): this {
+    this.document = this.document.filter(Character => !(Character.type === 'EOF'))
+    this.document = [...this.document, this._createEndOfFile()]
     return this
   }
 
   _changeLocationBy(delta: number): this {
+    const { x, y } = this.position
+    let newX = x,
+        newY = y
+    let deltaXLeft = Math.abs(delta)
+    let lineRemainder = (delta > 0) ? (this.lengthsOfDocumentSplitByParagraphs[y] - x) : (x)
+
+    while (deltaXLeft > 0) {
+      if ((delta > 0) ? (deltaXLeft <= lineRemainder) : (deltaXLeft <= x)) {
+        newX = newX + ((delta > 0) ? deltaXLeft : -deltaXLeft)
+        deltaXLeft = 0
+      } else {
+        if (delta > 0) {
+          newY += 1
+          newX = 0
+        } else {
+          newY -= 1
+          newX = this.lengthsOfDocumentSplitByParagraphs[newY]
+        }
+        deltaXLeft -= lineRemainder + 1
+        if (!this.lengthsOfDocumentSplitByParagraphs[newY]) throw new Error('Location out of range.')
+        lineRemainder = this.lengthsOfDocumentSplitByParagraphs[newY]
+      }
+    }
+
+    this.position = { x: newX, y: newY }
+    return this
+  }
+
+  positionToIndex({ position } : { position: Position }): number {
+    const totalCharactersToY = this.lengthsOfDocumentSplitByParagraphs
+      .slice(0, position.y)
+      .reduce((previousValue, currentValue) => previousValue + currentValue, 0)
+    return totalCharactersToY + position.x
+  }
+
+  typeNewLine(): this {
+    return this.typeCharacter({ key: '', endOfLine: true })
+  }
+
+  typeCharacter({ key, endOfLine = false }: {
+      key: string,
+      endOfLine?: boolean
+  }): this {
+    if (key.split('').length !== 1 && !endOfLine) {
+      throw new Error(`Single key expected. Received "${key}"`)
+    }
+
+    this._handleEndOfFileCharacter()
+    this.document = insert(
+      this.document,
+      this.positionToIndex({ position: this.position }),
+      endOfLine ? this._createEndOfLine() : this._createCharacter({ text: key })
+    ) as Element[]
+    this.cursorRight()
+    if (endOfLine) this.cursorRight() // to move after the last line
+    this._handleEndOfFileCharacter()
     return this
   }
 
@@ -77,7 +143,7 @@ export default class Document {
   }
 
   cursorRight(): this {
-    this._changeLocationBy(1)
+    this._changeLocationBy(+1)
     return this
   }
 }
