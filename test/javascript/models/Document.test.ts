@@ -144,4 +144,13 @@ describe('Document', () => {
     document.cursorLeft()
     expect(document.position).toEqual({ x: 1, y: 0 })
   })
+
+  it('#backspace', () => {
+    const document = new Document()
+    document.typeCharacter({ key: 'A' })
+    document.typeCharacter({ key: 'B' })
+    document.backspace()
+    expect(document.document).toHaveLength(2)
+    expect(document.position).toEqual({ x: 1, y: 0 })
+  })
 })

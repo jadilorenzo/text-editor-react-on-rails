@@ -1,7 +1,7 @@
 import Character from './Character'
 import EndOfFile from './EndOfFile'
 import EndOfLine from './EndOfLine'
-import { insert } from './utils'
+import { insert, remove } from './utils'
 
 export type Element = EndOfFile | EndOfLine | Character
 
@@ -10,9 +10,12 @@ export interface Position {
   y: number;
 }
 
+export interface Selection { start: Position, end: Position }
+
 export default class Document {
   position: Position = { x: 0, y: 0 }
   document: Element[] = []
+  selection: undefined | Selection = undefined
 
   // breaks document into arrays of same type in
   // the original order
@@ -144,6 +147,19 @@ export default class Document {
 
   cursorRight(): this {
     this._changeLocationBy(+1)
+    return this
+  }
+
+  backspace(): this {
+    if (this.selection) {
+
+    } else {
+      this.document = remove(
+        this.document,
+        this.positionToIndex({ position: this.position }),
+      ) as Element[]
+      this.cursorLeft()
+    }
     return this
   }
 }
