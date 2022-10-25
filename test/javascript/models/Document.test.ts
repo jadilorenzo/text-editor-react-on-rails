@@ -153,4 +153,18 @@ describe('Document', () => {
     expect(document.document).toHaveLength(2)
     expect(document.position).toEqual({ x: 1, y: 0 })
   })
+
+  it('#setSelection', () => {
+    const document = new Document()
+    document.typeCharacter({ key: 'A' })
+    document.typeCharacter({ key: 'B' })
+    document.setSelection({
+      start: {x: 1, y: 0},
+      end: {x: 0, y: 0}
+    })
+    expect(document.selection).toEqual({
+      start: {x: 0, y: 0},
+      end: {x: 1, y: 0}
+    })
+  })
 })

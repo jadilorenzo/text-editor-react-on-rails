@@ -150,6 +150,24 @@ export default class Document {
     return this
   }
 
+  setSelection(selection: Selection): this {
+    if (
+      Math.abs(
+        this.positionToIndex({ position: selection.start }) -
+        this.positionToIndex({ position: selection.end })
+      ) > this.document.length
+    ) throw new Error(`Invalid selection: ${JSON.stringify(selection)}`)
+
+    let sortedSelection = selection
+    if (
+      this.positionToIndex({ position: sortedSelection.start }) > this.positionToIndex({ position: sortedSelection.end })
+    ) sortedSelection = { start: selection.end, end: selection.start }
+
+    this.selection = sortedSelection
+    return this
+  }
+
+
   backspace(): this {
     if (this.selection) {
 
