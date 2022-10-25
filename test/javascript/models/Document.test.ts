@@ -62,10 +62,6 @@ describe('Document', () => {
     ])
   })
 
-  it('#positionToIndex', () => {
-    const document = setupDocument(exampleElementsWithParagraphBreak)
-    expect(document.positionToIndex({ position: { x: 1, y: 1 } })).toBe(2)
-  })
 
   describe('#typeCharacter', () => {
     it('can type characters', () => {
@@ -141,17 +137,70 @@ describe('Document', () => {
     const document = new Document()
     document.typeCharacter({ key: 'A' })
     document.typeCharacter({ key: 'B' })
-    document.cursorLeft()
-    expect(document.position).toEqual({ x: 1, y: 0 })
+    document.typeNewLine()
+    document.typeCharacter({ key: 'C' })
+    document.typeCharacter({ key: 'D' })
+    const positions = [
+      document.position,
+      document.cursorLeft().position,
+      document.cursorLeft().position,
+      document.cursorLeft().position,
+      document.cursorLeft().position,
+      document.cursorLeft().position,
+    ]
+    expect(positions).toEqual([
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ])
   })
 
-  it('#backspace', () => {
-    const document = new Document()
-    document.typeCharacter({ key: 'A' })
-    document.typeCharacter({ key: 'B' })
-    document.backspace()
-    expect(document.document).toHaveLength(2)
-    expect(document.position).toEqual({ x: 1, y: 0 })
+  describe('#backspace', () => {
+    it('removes single character', () => {
+      const document = new Document()
+      document.typeCharacter({ key: 'A' })
+      document.typeCharacter({ key: 'B' })
+      document.backspace()
+      expect(document.document).toHaveLength(2)
+      expect(document.position).toEqual(1)
+    })
+
+    it('removes selection', () => {
+      const document = new Document()
+      document.typeCharacter({ key: 'A' })
+      document.typeCharacter({ key: 'B' })
+      document.setSelection({
+        start: 1,
+        end: 0
+      })
+      document.backspace()
+      expect(document.document).toHaveLength(2)
+      expect(document.position).toEqual(0)
+    })
+
+    it('removes selection including new line', () => {
+      const document = new Document()
+      document.typeCharacter({ key: 'A' })
+      document.typeCharacter({ key: 'B' })
+      document.typeNewLine()
+      document.typeCharacter({ key: 'C' })
+      document.typeCharacter({ key: 'D' })
+      document.setSelection({
+        start: 0,
+        end: 3
+      })
+      document.backspace()
+      expect(document.document).toHaveLength(3)
+      expect(document.position).toEqual(0)
+      expect(document.document).toEqual([
+        new Character({ text: 'C'}),
+        new Character({ text: 'D'}),
+        new EndOfFile()
+      ])
+    })
   })
 
   it('#setSelection', () => {
@@ -159,12 +208,12 @@ describe('Document', () => {
     document.typeCharacter({ key: 'A' })
     document.typeCharacter({ key: 'B' })
     document.setSelection({
-      start: {x: 1, y: 0},
-      end: {x: 0, y: 0}
+      start: 1,
+      end: 0
     })
     expect(document.selection).toEqual({
-      start: {x: 0, y: 0},
-      end: {x: 1, y: 0}
+      start: 0,
+      end: 1
     })
   })
 })

@@ -5,15 +5,11 @@ import { insert, remove } from './utils'
 
 export type Element = EndOfFile | EndOfLine | Character
 
-export interface Position {
-  x: number;
-  y: number;
-}
-
-export interface Selection { start: Position, end: Position }
+export interface Selection { start: number, end: number }
 
 export default class Document {
-  position: Position = { x: 0, y: 0 }
+  // position: Position = { x: 0, y: 0 }
+  position: number = 0
   document: Element[] = []
   selection: undefined | Selection = undefined
 
@@ -75,45 +71,19 @@ export default class Document {
   }
 
   _handleEndOfFileCharacter(): this {
+    this._removeEndOfFileCharacter()
+    this._addEndOfFileCharacter()
+    return this
+  }
+
+  _removeEndOfFileCharacter(): this {
     this.document = this.document.filter(Character => !(Character.type === 'EOF'))
+    return this
+  }
+
+  _addEndOfFileCharacter(): this {
     this.document = [...this.document, this._createEndOfFile()]
     return this
-  }
-
-  _changeLocationBy(delta: number): this {
-    const { x, y } = this.position
-    let newX = x,
-        newY = y
-    let deltaXLeft = Math.abs(delta)
-    let lineRemainder = (delta > 0) ? (this.lengthsOfDocumentSplitByParagraphs[y] - x) : (x)
-
-    while (deltaXLeft > 0) {
-      if ((delta > 0) ? (deltaXLeft <= lineRemainder) : (deltaXLeft <= x)) {
-        newX = newX + ((delta > 0) ? deltaXLeft : -deltaXLeft)
-        deltaXLeft = 0
-      } else {
-        if (delta > 0) {
-          newY += 1
-          newX = 0
-        } else {
-          newY -= 1
-          newX = this.lengthsOfDocumentSplitByParagraphs[newY]
-        }
-        deltaXLeft -= lineRemainder + 1
-        if (!this.lengthsOfDocumentSplitByParagraphs[newY]) throw new Error('Location out of range.')
-        lineRemainder = this.lengthsOfDocumentSplitByParagraphs[newY]
-      }
-    }
-
-    this.position = { x: newX, y: newY }
-    return this
-  }
-
-  positionToIndex({ position } : { position: Position }): number {
-    const totalCharactersToY = this.lengthsOfDocumentSplitByParagraphs
-      .slice(0, position.y)
-      .reduce((previousValue, currentValue) => previousValue + currentValue, 0)
-    return totalCharactersToY + position.x
   }
 
   typeNewLine(): this {
@@ -131,52 +101,67 @@ export default class Document {
     this._handleEndOfFileCharacter()
     this.document = insert(
       this.document,
-      this.positionToIndex({ position: this.position }),
+      this.position,
       endOfLine ? this._createEndOfLine() : this._createCharacter({ text: key })
     ) as Element[]
     this.cursorRight()
-    if (endOfLine) this.cursorRight() // to move after the last line
     this._handleEndOfFileCharacter()
     return this
   }
 
   cursorLeft(): this {
-    this._changeLocationBy(-1)
+    if (this.position === 0) throw new Error("Position out of range.")
+    this.position = this.position - 1
     return this
   }
 
   cursorRight(): this {
-    this._changeLocationBy(+1)
+    if (this.position === this.document.length - 1) throw new Error("Position out of range.")
+    this.position = this.position + 1
     return this
   }
 
   setSelection(selection: Selection): this {
     if (
       Math.abs(
-        this.positionToIndex({ position: selection.start }) -
-        this.positionToIndex({ position: selection.end })
+        selection.start -
+        selection.end
       ) > this.document.length
     ) throw new Error(`Invalid selection: ${JSON.stringify(selection)}`)
 
     let sortedSelection = selection
-    if (
-      this.positionToIndex({ position: sortedSelection.start }) > this.positionToIndex({ position: sortedSelection.end })
-    ) sortedSelection = { start: selection.end, end: selection.start }
+    if (selection.start > selection.end) sortedSelection = { start: selection.end, end: selection.start }
 
     this.selection = sortedSelection
     return this
   }
 
+  _removeCharacter(): this {
+    this._removeEndOfFileCharacter()
+
+    const index = this.position
+    const lastIndex = index === this.document.length
+    this.document = remove(
+      this.document,
+      index - 1
+    ) as Element[]
+    this.cursorLeft()
+
+    this._handleEndOfFileCharacter()
+    return this
+  }
 
   backspace(): this {
     if (this.selection) {
-
+      this.position = this.selection.end
+      while (
+        this.position !==
+        this.selection.start
+      ) {
+        this._removeCharacter()
+      }
     } else {
-      this.document = remove(
-        this.document,
-        this.positionToIndex({ position: this.position }),
-      ) as Element[]
-      this.cursorLeft()
+      this._removeCharacter()
     }
     return this
   }
