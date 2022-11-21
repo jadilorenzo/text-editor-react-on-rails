@@ -13,7 +13,8 @@ export default function TextEditor() {
     setDocumentState(props)
     forceUpdate()
   }
-  const [selectionStartIndex, setSelectionStartIndex] = useState(0)
+  const [selectionStartIndex, setSelectionStartIndex] = useState<number | undefined>(undefined)
+  const [hoverSelectionIndex, setHoverSelectionIndex] = useState(0)
 
   useHandleDocument({ setDocument })
   
@@ -21,14 +22,22 @@ export default function TextEditor() {
     <div className='text-editor surface'>
       {document.document.length === 0 ? <Cursor/> : null}
       {document.document.map((element, index) => {
-        const insideSelection = document.selection ? index >= document.selection.start && index <= document.selection.end - 1 : false
+        const insideSelection = document.selection ? (
+          index >= document.selection.start && index <= document.selection.end - 1
+        ) : (selectionStartIndex !== undefined) ? (
+          (index >= selectionStartIndex && index <= hoverSelectionIndex) || (index <= selectionStartIndex && index >= hoverSelectionIndex)
+        ) : false
         return (
           <span 
             key={JSON.stringify({element, index})}
             onMouseDown={() => setSelectionStartIndex(index)} 
             onMouseUp={() => {
-              if (selectionStartIndex !== index) setDocument((prevDocument) => prevDocument.setSelection({start: selectionStartIndex, end: index}))
+              if (selectionStartIndex !== index) {
+                setDocument((prevDocument) => prevDocument.setSelection({start: selectionStartIndex, end: index}))
+                setSelectionStartIndex(undefined)
+              }
             }}
+            onMouseEnter={() => setHoverSelectionIndex(index)}
             style={{background: insideSelection ? '#90CAF9' : undefined}}
           >
             {document.position === index ? <Cursor/> : null}
