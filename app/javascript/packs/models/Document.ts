@@ -16,7 +16,7 @@ export default class Document {
   // breaks document into arrays of same type in
   // the original order
   get documentSplitByGroups(): Element[][] {
-    const documentSplitByGroups = []
+    const documentSplitByGroups: Element[][] = []
     let counter = 0
     this.document.forEach((element, index) => {
       if (index === 0) {
@@ -37,7 +37,7 @@ export default class Document {
   }
 
   get documentSplitByParagraphs(): Element[][] {
-    const documentSplitByParagraphs = []
+    const documentSplitByParagraphs: Element[][] = []
     let counter = 0
     this.document.forEach((element, index) => {
       if (index === 0) {
@@ -97,6 +97,7 @@ export default class Document {
     if (key.split('').length !== 1 && !endOfLine) {
       throw new Error(`Single key expected. Received "${key}"`)
     }
+    if (this.selection) this.backspace()
 
     this._handleEndOfFileCharacter()
     this.document = insert(
@@ -110,14 +111,12 @@ export default class Document {
   }
 
   cursorLeft(): this {
-    if (this.position === 0) throw new Error("Position out of range.")
-    this.position = this.position - 1
+    if (this.position !== 0) this.position = this.position - 1
     return this
   }
 
   cursorRight(): this {
-    if (this.position === this.document.length - 1) throw new Error("Position out of range.")
-    this.position = this.position + 1
+    if (this.position !== this.document.length - 1) this.position = this.position + 1
     return this
   }
 
@@ -133,6 +132,11 @@ export default class Document {
     if (selection.start > selection.end) sortedSelection = { start: selection.end, end: selection.start }
 
     this.selection = sortedSelection
+    return this
+  }
+
+  resetSelection() {
+    this.selection = undefined
     return this
   }
 

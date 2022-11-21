@@ -13,3 +13,64 @@
  *= require_tree .
  *= require_self
  */
+
+*::selection {
+  background: none;
+}
+
+.text-editor {
+  border-radius: 1rem;
+  background: white !important;
+  aspect-ratio: 8.5 / 11;
+  width: 35rem;
+  margin: auto;
+  padding: calc(35rem / 8);
+}
+
+.surface {
+  background-color: rgba(200, 200, 200, 0.075);
+  border: 1px solid #e0e0e0;
+}
+
+html {
+  /* font-family: Roboto, Arial, Helvetica, sans-serif; */
+  font-family: Roboto;
+}
+
+html, body {
+  margin: 0; 
+}
+
+.header {
+  padding: 1rem;
+  font-size: xx-large;
+  font-weight: 100;
+  border: none;
+  border-bottom: #008cff 0.2rem solid;
+  font-family: 'Avenir Next';
+}
+
+.body {
+  width: 70%;
+  margin: auto;
+  padding: 2rem;
+  border-radius: 1rem;
+  margin-top: 1rem;
+  max-height: 40rem;
+  overflow: scroll;
+}
+
+.document-title {
+  margin: -2rem;
+  margin-bottom: 1rem;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  height: 4rem;
+  display: flex;
+  justify-items: start;
+  align-items: center;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  font-weight: bold;
+}
