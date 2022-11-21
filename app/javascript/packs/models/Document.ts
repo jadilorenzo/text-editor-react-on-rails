@@ -77,7 +77,7 @@ export default class Document {
   }
 
   _removeEndOfFileCharacter(): this {
-    this.document = this.document.filter(Character => !(Character.type === 'EOF'))
+    this.document = this.document.filter(character => !(character.type === 'EOF'))
     return this
   }
 
@@ -90,20 +90,25 @@ export default class Document {
     return this.typeCharacter({ key: '', endOfLine: true })
   }
 
-  typeCharacter({ key, endOfLine = false }: {
+  typeCharacter({ key, type, endOfLine = false }: {
       key: string,
+      type?: string
       endOfLine?: boolean
   }): this {
     if (key.split('').length !== 1 && !endOfLine) {
       throw new Error(`Single key expected. Received "${key}"`)
     }
     if (this.selection) this.backspace()
-
+    
     this._handleEndOfFileCharacter()
+    if (this.position !== 0) {
+      const prevType = this.document[this.position-1]?.type
+      if (!type && (prevType !== 'EOF' && prevType !== 'EOL')) type = this.document[this.position-1]?.type
+    }
     this.document = insert(
       this.document,
       this.position,
-      endOfLine ? this._createEndOfLine() : this._createCharacter({ text: key })
+      endOfLine ? this._createEndOfLine() : this._createCharacter({ text: key, type })
     ) as Element[]
     this.cursorRight()
     this._handleEndOfFileCharacter()

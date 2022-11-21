@@ -131,6 +131,21 @@ describe('Document', () => {
         new EndOfFile()
       ])
     })
+
+    it('keeps type of last element', () => {
+      const document = new Document()
+      document.typeCharacter({ key: 'A' })
+      document.typeCharacter({ key: 'B' })
+      document.typeCharacter({ key: 'C', type: 'bold' })
+      document.typeCharacter({ key: 'D' })
+      expect(document.document).toEqual([
+        new Character({ text: 'A' }),
+        new Character({ text: 'B' }),
+        new Character({ text: 'C', type: 'bold' }),
+        new Character({ text: 'D', type: 'bold' }),
+        new EndOfFile()
+      ])
+    })
   })
 
   it('#cursorLeft', () => {
