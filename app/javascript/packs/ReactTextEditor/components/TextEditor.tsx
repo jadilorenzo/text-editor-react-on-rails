@@ -21,7 +21,7 @@ export default function TextEditor() {
     <div className='text-editor surface'>
       {document.document.length === 0 ? <Cursor/> : null}
       {document.document.map((element, index) => {
-        const insideSelection = document.selection ? index >= document.selection.start && index <= document.selection.end : false
+        const insideSelection = document.selection ? index >= document.selection.start && index <= document.selection.end - 1 : false
         return (
           <span 
             key={JSON.stringify({element, index})}
@@ -36,6 +36,8 @@ export default function TextEditor() {
               <br/>
             ) : (element.type === 'none') ? (
               element.text
+            ) : (element.type === 'bold') ? (
+              <b>{element.text}</b>
             ) : null}
           </span>
         )

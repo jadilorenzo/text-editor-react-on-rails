@@ -216,4 +216,17 @@ describe('Document', () => {
       end: 1
     })
   })
+  
+  it('#styleSelection', () => {
+    const document = new Document()
+    document.typeCharacter({ key: 'A' })
+    document.typeCharacter({ key: 'B' })
+    document.setSelection({
+      start: 0,
+      end: 2
+    })
+    document.styleSelection({ type: 'bold' })
+    expect(document.document[0].type).toEqual('bold')
+    expect(document.document[1].type).toEqual('bold')
+  })
 })

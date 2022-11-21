@@ -155,6 +155,20 @@ export default class Document {
     return this
   }
 
+  styleSelection({ type }: { type: string }): this {
+    if (this.selection) {
+      this.position = this.selection.start
+      while (
+        this.position !==
+        this.selection.end
+      ) {
+        this.document[this.position].type = type
+        this.cursorRight()
+      }
+    }
+    return this
+  }
+
   backspace(): this {
     if (this.selection) {
       this.position = this.selection.end
