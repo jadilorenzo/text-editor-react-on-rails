@@ -33,7 +33,7 @@ export default function TextEditor() {
             onMouseDown={() => setSelectionStartIndex(index)} 
             onMouseUp={() => {
               if (selectionStartIndex !== index) {
-                setDocument((prevDocument) => prevDocument.setSelection({start: selectionStartIndex, end: index}))
+                setDocument((prevDocument) => prevDocument.setSelection({start: (selectionStartIndex || 0) + ((selectionStartIndex || 0) > index ? +1 : 0 ), end: index + ((selectionStartIndex || 0) > index ? 0 : +1)}))
                 setSelectionStartIndex(undefined)
               }
             }}
@@ -47,6 +47,8 @@ export default function TextEditor() {
               element.text
             ) : (element.type === 'bold') ? (
               <b>{element.text}</b>
+            ) : (element.type === 'italics') ? (
+              <i>{element.text}</i>
             ) : null}
           </span>
         )

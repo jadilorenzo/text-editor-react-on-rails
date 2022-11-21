@@ -2,13 +2,24 @@ import { useEffect } from "react"
 
 const useHandleDocument = ({setDocument}) => {
   useEffect(() => {
+    window.addEventListener('mousedown', () => {
+      setDocument((prevDocument) => prevDocument.resetSelection())
+    })
     window.addEventListener('keydown', (e) => {
+      e.preventDefault()
       const {key} = e
-      console.log(e)
       if (e.metaKey) {
         switch (key) {
           case 'b':
-            setDocument((prevDocument) => prevDocument.styleSelection({ type: 'bold'}))
+            setDocument((prevDocument) => prevDocument.styleSelection({ type: 'bold' }))
+            break;
+          
+          case 'i':
+            setDocument((prevDocument) => prevDocument.styleSelection({ type: 'italics' }))
+            break;
+            
+          case 'r':
+            window.location.reload()
             break;
         
           default:
