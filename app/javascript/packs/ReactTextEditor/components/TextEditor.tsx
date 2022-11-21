@@ -49,6 +49,10 @@ export default function TextEditor() {
               <b>{element.text}</b>
             ) : (element.type === 'italics') ? (
               <i>{element.text}</i>
+            ) : (element.type === 'underlined') ? (
+              <u>{element.text}</u>
+            ) : (element.type === 'strikethrough') ? (
+              <span style={{ textDecoration: 'line-through' }}>{element.text}</span>
             ) : null}
           </span>
         )

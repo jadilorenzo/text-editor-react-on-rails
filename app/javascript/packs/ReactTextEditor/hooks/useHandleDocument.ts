@@ -17,6 +17,14 @@ const useHandleDocument = ({setDocument}) => {
           case 'i':
             setDocument((prevDocument) => prevDocument.styleSelection({ type: 'italics' }))
             break;
+
+          case 'u':
+            setDocument((prevDocument) => prevDocument.styleSelection({ type: 'underlined' }))
+            break;
+
+          case 'x':
+            setDocument((prevDocument) => prevDocument.styleSelection({ type: 'strikethrough' }))
+            break;
             
           case 'r':
             window.location.reload()
