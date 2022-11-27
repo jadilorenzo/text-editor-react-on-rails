@@ -5,14 +5,14 @@ import EndOfLine from '../../../app/javascript/packs/models/EndOfLine'
 
 describe('Document', () => {
   const exampleElements = [
-    new Character({text: 'A', type: 'bold'}),
-    new Character({text: 'B', type: 'bold'}),
+    new Character({text: 'A', styles: [ 'bold' ]}),
+    new Character({text: 'B', styles: [ 'bold' ]}),
     new Character({text: 'a'}),
     new Character({text: 'b'})
   ]
 
   const exampleElementsWithParagraphBreak = [
-    new Character({text: 'A', type: 'bold'}),
+    new Character({text: 'A', styles: [ 'bold' ]}),
     new EndOfLine(),
     new Character({text: 'B'}),
   ]
@@ -23,45 +23,6 @@ describe('Document', () => {
     document._handleEndOfFileCharacter()
     return document
   }
-
-  it('#lengthsOfDocumentSplitByParagraphs', () => {
-    const document = setupDocument(exampleElementsWithParagraphBreak)
-    expect(document.lengthsOfDocumentSplitByParagraphs).toEqual([
-      1, 2
-    ])
-  })
-
-  it('#documentSplitByParagraphs', () => {
-    const document = setupDocument(exampleElementsWithParagraphBreak)
-    expect(document.documentSplitByParagraphs).toEqual([
-      [new Character({text: 'A', type: 'bold'})],
-      [new Character({text: 'B'}), new EndOfFile()]
-    ])
-  })
-
-  it('#lengthsOfDocumentSplitByGroups', () => {
-    const document = setupDocument(exampleElements)
-    expect(document.lengthsOfDocumentSplitByGroups).toEqual([
-      2, 2, 1
-    ])
-  })
-
-  it('#documentSplitByGroups', () => {
-    const document = setupDocument(exampleElements)
-    expect(document.documentSplitByGroups.length).toBe(3);
-    expect(document.documentSplitByGroups).toEqual([
-      [
-        new Character({text: 'A', type: 'bold'}),
-        new Character({text: 'B', type: 'bold'}),
-      ],
-      [
-        new Character({text: 'a'}),
-        new Character({text: 'b'}),
-      ],
-      [new EndOfFile()]
-    ])
-  })
-
 
   describe('#typeCharacter', () => {
     it('can type characters', () => {
@@ -136,13 +97,13 @@ describe('Document', () => {
       const document = new Document()
       document.typeCharacter({ key: 'A' })
       document.typeCharacter({ key: 'B' })
-      document.typeCharacter({ key: 'C', type: 'bold' })
+      document.typeCharacter({ key: 'C', styles: ['bold'] })
       document.typeCharacter({ key: 'D' })
       expect(document.document).toEqual([
         new Character({ text: 'A' }),
         new Character({ text: 'B' }),
-        new Character({ text: 'C', type: 'bold' }),
-        new Character({ text: 'D', type: 'bold' }),
+        new Character({ text: 'C', styles: ['bold'] }),
+        new Character({ text: 'D', styles: ['bold'] }),
         new EndOfFile()
       ])
     })
@@ -232,16 +193,57 @@ describe('Document', () => {
     })
   })
   
-  it('#styleSelection', () => {
-    const document = new Document()
-    document.typeCharacter({ key: 'A' })
-    document.typeCharacter({ key: 'B' })
-    document.setSelection({
-      start: 0,
-      end: 2
+  describe('#styleSelection', () => {
+    let document
+    beforeEach(() => {
+      document = new Document()
+      document.typeCharacter({ key: 'A' })
+      document.typeCharacter({ key: 'B' })
+      document.typeCharacter({ key: 'C' })
     })
-    document.styleSelection({ type: 'bold' })
-    expect(document.document[0].type).toEqual('bold')
-    expect(document.document[1].type).toEqual('bold')
+
+    it('styles bold correctly', () => {
+      document.setSelection({
+        start: 0,
+        end: 2
+      })
+      document.styleSelection({ style: 'bold' })
+      expect(document.document[0].styles?.includes('bold')).toBeTruthy()
+      expect(document.document[1].styles?.includes('bold')).toBeTruthy()
+      expect(document.document[2].styles?.includes('bold')).toBeFalsy()
+    })
+
+    it('styles underlined correctly', () => {
+      document.setSelection({
+        start: 0,
+        end: 2
+      })
+      document.styleSelection({ style: 'underlined' })
+      expect(document.document[0].styles?.includes('underlined')).toBeTruthy()
+      expect(document.document[1].styles?.includes('underlined')).toBeTruthy()
+      expect(document.document[2].styles?.includes('underlined')).toBeFalsy()
+    })
+
+    it('styles strikethrough correctly', () => {
+      document.setSelection({
+        start: 0,
+        end: 2
+      })
+      document.styleSelection({ style: 'strikethrough' })
+      expect(document.document[0].styles?.includes('strikethrough')).toBeTruthy()
+      expect(document.document[1].styles?.includes('strikethrough')).toBeTruthy()
+      expect(document.document[2].styles?.includes('strikethrough')).toBeFalsy()
+    })
+
+    it('styles italics correctly', () => {
+      document.setSelection({
+        start: 0,
+        end: 2
+      })
+      document.styleSelection({ style: 'italics' })
+      expect(document.document[0].styles?.includes('italics')).toBeTruthy()
+      expect(document.document[1].styles?.includes('italics')).toBeTruthy()
+      expect(document.document[2].styles?.includes('italics')).toBeFalsy()
+    })
   })
 })

@@ -2,6 +2,7 @@ import React, { startTransition, useState } from 'react'
 import Document from '../../models/Document'
 import useHandleDocument from '../hooks/useHandleDocument'
 import Cursor from './Cursor';
+import Element from './Element';
 
 export default function TextEditor() {
   // to force update upon class change
@@ -43,17 +44,7 @@ export default function TextEditor() {
             {document.position === index ? <Cursor/> : null}
             {(element.type === 'EOL') ? (
               <br/>
-            ) : (element.type === 'none') ? (
-              element.text
-            ) : (element.type === 'bold') ? (
-              <b>{element.text}</b>
-            ) : (element.type === 'italics') ? (
-              <i>{element.text}</i>
-            ) : (element.type === 'underlined') ? (
-              <u>{element.text}</u>
-            ) : (element.type === 'strikethrough') ? (
-              <span style={{ textDecoration: 'line-through' }}>{element.text}</span>
-            ) : null}
+            ) : <Element element={element} />}
           </span>
         )
       })}

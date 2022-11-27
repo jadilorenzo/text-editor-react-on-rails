@@ -53,19 +53,19 @@ html, body {
 .body {
   width: 70%;
   margin: auto;
-  padding: 2rem;
+}
+
+.editor {
   border-radius: 1rem;
-  margin-top: 1rem;
   max-height: 40rem;
   overflow: scroll;
+  padding: 1rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: none;
 }
 
 .document-title {
-  margin: -2rem;
-  margin-bottom: 1rem;
-  border-top: none;
-  border-left: none;
-  border-right: none;
   height: 4rem;
   display: flex;
   justify-items: start;
@@ -73,4 +73,8 @@ html, body {
   padding-left: 2rem;
   padding-right: 2rem;
   font-weight: bold;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  margin-top: 1rem;
+  background-color: rgba(200, 200, 200, 0.15);
 }

@@ -13,53 +13,8 @@ export default class Document {
   document: Element[] = []
   selection: undefined | Selection = undefined
 
-  // breaks document into arrays of same type in
-  // the original order
-  get documentSplitByGroups(): Element[][] {
-    const documentSplitByGroups: Element[][] = []
-    let counter = 0
-    this.document.forEach((element, index) => {
-      if (index === 0) {
-        documentSplitByGroups.push([element])
-      } else {
-        if (this.document[index - 1].type !== element.type) {
-          counter++
-          documentSplitByGroups.push([])
-        }
-        documentSplitByGroups[counter].push(element)
-      }
-    })
-    return documentSplitByGroups
-  }
-
-  get lengthsOfDocumentSplitByGroups() {
-    return this.documentSplitByGroups.map(group => group.length)
-  }
-
-  get documentSplitByParagraphs(): Element[][] {
-    const documentSplitByParagraphs: Element[][] = []
-    let counter = 0
-    this.document.forEach((element, index) => {
-      if (index === 0) {
-        documentSplitByParagraphs.push([element])
-      } else {
-        if (element.type === 'EOL') {
-          counter++
-          documentSplitByParagraphs.push([])
-        } else {
-          documentSplitByParagraphs[counter].push(element)
-        }
-      }
-    })
-    return documentSplitByParagraphs
-  }
-
-  get lengthsOfDocumentSplitByParagraphs() {
-    return this.documentSplitByParagraphs.map(paragraph => paragraph.length)
-  }
-
-  _createCharacter({ text, type = 'none' }: { text: string, type?: string }): Character {
-    return new Character({ text, type })
+  _createCharacter({ text, styles = [] }: { text: string, styles?: string[] }): Character {
+    return new Character({ text, styles })
   }
 
   _createEndOfFile(): EndOfFile {
@@ -90,9 +45,9 @@ export default class Document {
     return this.typeCharacter({ key: '', endOfLine: true })
   }
 
-  typeCharacter({ key, type, endOfLine = false }: {
+  typeCharacter({ key, styles = [], endOfLine = false }: {
       key: string,
-      type?: string
+      styles?: string[]
       endOfLine?: boolean
   }): this {
     if (key.split('').length !== 1 && !endOfLine) {
@@ -102,13 +57,13 @@ export default class Document {
     
     this._handleEndOfFileCharacter()
     if (this.position !== 0) {
-      const prevType = this.document[this.position-1]?.type
-      if (!type && (prevType !== 'EOF' && prevType !== 'EOL')) type = this.document[this.position-1]?.type
+      const prevStyles = this.document[this.position-1]?.styles
+      if (styles.length === 0) styles = this.document[this.position-1]?.styles as string[]
     }
     this.document = insert(
       this.document,
       this.position,
-      endOfLine ? this._createEndOfLine() : this._createCharacter({ text: key, type })
+      endOfLine ? this._createEndOfLine() : this._createCharacter({ text: key, styles })
     ) as Element[]
     this.cursorRight()
     this._handleEndOfFileCharacter()
@@ -160,14 +115,23 @@ export default class Document {
     return this
   }
 
-  styleSelection({ type }: { type: string }): this {
+  _toggleStyle({ character, style }: { character: Element, style: string }) {
+    if (character.styles?.includes(style)) {
+      character.styles = character.styles.filter(oldStyle => oldStyle !== style)
+    } else {
+      character.styles = [...character.styles, style]
+    }
+  }
+
+  styleSelection({ style }: { style: string }): this {
+    console.log(this.document, this.selection)
     if (this.selection) {
       this.position = this.selection.start
       while (
         this.position !==
         this.selection.end
       ) {
-        this.document[this.position].type = type
+        this._toggleStyle({ character: this.document[this.position], style })
         this.cursorRight()
       }
     }
