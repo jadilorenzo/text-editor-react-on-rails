@@ -1,6 +1,7 @@
 import React, { startTransition, useState } from 'react'
 import Document from '../../models/Document'
 import useHandleDocument from '../hooks/useHandleDocument'
+import Character from './Character';
 import Cursor from './Cursor';
 import Element from './Element';
 
@@ -26,32 +27,18 @@ export default function TextEditor() {
         setHoverSelectionIndex(0)
         setSelectionStartIndex(undefined)
       }}>
-        {document.document.map((element, index) => {
-          const insideSelection = document.selection ? (
-            index >= document.selection.start && index <= document.selection.end - 1
-          ) : (selectionStartIndex !== undefined) ? (
-            (index >= selectionStartIndex && index <= hoverSelectionIndex) || (index <= selectionStartIndex && index >= hoverSelectionIndex)
-          ) : false
-          return (
-            <span 
-              key={JSON.stringify({element, index})}
-              onMouseDown={() => setSelectionStartIndex(index)} 
-              onMouseUp={() => {
-                if (Math.abs(selectionStartIndex || 0 - index) > 1) {
-                  setDocument((prevDocument) => prevDocument.setSelection({start: (selectionStartIndex || 0) + ((selectionStartIndex || 0) > index ? +1 : 0 ), end: index + ((selectionStartIndex || 0) > index ? 0 : +1)}))
-                  setSelectionStartIndex(undefined)
-                }
-              }}
-              onMouseEnter={() => setHoverSelectionIndex(index)}
-              style={{background: insideSelection ? '#90CAF9' : undefined}}
-            >
-              {document.position === index ? <Cursor/> : null}
-              {(element.type === 'EOL') ? (
-                <br/>
-              ) : <Element element={element} />}
-            </span>
-          )
-        })}
+        {document.document.map((element, index) => (
+          <Character 
+            index={index} 
+            element={element} 
+            document={document} 
+            setDocument={setDocument}
+            selectionStartIndex={selectionStartIndex} 
+            setSelectionStartIndex={setSelectionStartIndex}
+            hoverSelectionIndex={hoverSelectionIndex}
+            setHoverSelectionIndex={setHoverSelectionIndex}
+          />
+        ))}
       </span>
     </div>
   )

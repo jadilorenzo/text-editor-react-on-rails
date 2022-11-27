@@ -44,9 +44,11 @@ html, body {
 .header {
   padding: 1rem;
   font-size: xx-large;
-  font-weight: 100;
+  font-weight: bold;
   border: none;
-  border-bottom: #008cff 0.2rem solid;
+  color: white;
+  background-color: #008cff;
+  border-bottom: #0064b6 solid 0.2rem;
   font-family: 'Avenir Next';
 }
 
