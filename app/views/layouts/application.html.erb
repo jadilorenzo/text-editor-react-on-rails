@@ -14,11 +14,10 @@
   </head>
 
   <body>
-    <div class='surface header'>
-      Text Editor
+    <div class='header'>
+      <%= image_tag "SquarePenLogo.png", class: 'logo' %>
+      <div class='text'>SquarePen</div>
     </div>
-    <div class='body'>
-      <%= yield %>
-    </div>
+    <%= yield %>
   </body>
 </html>
