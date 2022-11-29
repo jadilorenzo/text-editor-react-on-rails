@@ -20,7 +20,6 @@ const Character = ({
 
   return (
     <span 
-      key={JSON.stringify({element, index})}
       onMouseDown={() => setSelectionStartIndex(index)} 
       onMouseUp={() => {
         if (Math.abs(selectionStartIndex || 0 - index) > 1) {

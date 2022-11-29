@@ -56,10 +56,6 @@ export default class Document {
     if (this.selection) this.backspace()
     
     this._handleEndOfFileCharacter()
-    if (this.position !== 0) {
-      const prevStyles = this.document[this.position-1]?.styles
-      if (styles.length === 0) styles = this.document[this.position-1]?.styles as string[]
-    }
     this.document = insert(
       this.document,
       this.position,
@@ -124,7 +120,6 @@ export default class Document {
   }
 
   styleSelection({ style }: { style: string }): this {
-    console.log(this.document, this.selection)
     if (this.selection) {
       this.position = this.selection.start
       while (

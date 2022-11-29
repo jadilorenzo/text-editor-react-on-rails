@@ -12,7 +12,6 @@ const Element = ({ element }) => {
   })
   const {bold, underlined, italics, strikethrough} = activeStyles
 
-  console.log(element.styles, bold)
   return (
     <span style={{
       fontWeight: bold ? 'bold' : undefined,

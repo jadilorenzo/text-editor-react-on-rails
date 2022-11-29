@@ -80,3 +80,37 @@ html, body {
   margin-top: 1rem;
   background-color: rgba(200, 200, 200, 0.15);
 }
+
+.document-menu-bar {
+  background-color: rgba(200, 200, 200, 0.2);
+  border-top: none;
+  padding: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.btn-text {
+  background-color: rgba(200, 200, 200, 0.25);
+  padding: 0.25rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  width: min-content;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.btn-text__selected {
+  border-bottom: #0064b6 solid 1.5px;
+}
+
+.btn-text:hover {
+  background-color: rgba(200, 200, 200, 0.5);
+}
+
+.horizontal-btn-group {
+  display: flex;
+  gap: 0.75rem;
+  overflow: scroll;
+}
