@@ -35,16 +35,16 @@ export default function TextEditor() {
   useHandleDocument({ document, setDocument, activeStyles, toggleActiveStyles })
 
   return (
-    <div>
-      <div className='document-title surface'>Document Name</div>
-      <div className='document-menu-bar surface horizontal-btn-group'>
+    <div className='text-editor surface'>
+      <div className='title surface'>Document Name</div>
+      <div className='menu-bar surface horizontal-btn-group'>
         <TextButton>Bold</TextButton>
         <TextButton>Underlined</TextButton>
         <TextButton>Italics</TextButton>
         <TextButton>Strikethrough</TextButton>
       </div>
-      <div className='editor surface'>
-        <div className='text-editor surface'>
+      <div className='editor-area'>
+        <div className='editor surface'>
           {document.document.length === 0 ? <Cursor/> : null}
           <span onMouseLeave={() => {
             setHoverSelectionIndex(0)
