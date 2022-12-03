@@ -15,9 +15,9 @@ const DocumentEditor = () => {
     <>
      <div className='editor-area'>
         <div className='editor surface'>
-          {document.document.length === 0 ? <Cursor/> : null}
+          {document.elements.length === 0 ? <Cursor/> : null}
           <span onMouseLeave={resetHoverIndex}>
-            {document.document.map((element, index) => (
+            {document.elements.map((element, index) => (
               <Character 
                 key={JSON.stringify({element, index})}
                 index={index} 

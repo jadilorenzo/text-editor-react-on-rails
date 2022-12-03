@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react"
 import useHandleDocument from "../hooks/useHandleDocument"
-import Document from "../../models/BaseDocument"
+import Document from "../../models/Document"
 
 export const TextEditorContext = createContext<any>({})
 

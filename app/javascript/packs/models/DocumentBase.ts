@@ -7,10 +7,10 @@ export type Element = EndOfFile | EndOfLine | Character
 
 export interface Selection { start: number, end: number }
 
-export default class BaseDocument {
+export default class DocumentBase {
   // position: Position = { x: 0, y: 0 }
   position: number = 0
-  document: Element[] = []
+  elements: Element[] = []
   selection: undefined | Selection = undefined
 
   _createCharacter({ text, styles = [] }: { text: string, styles?: string[] }): Character {
@@ -32,12 +32,12 @@ export default class BaseDocument {
   }
 
   _removeEndOfFileCharacter(): this {
-    this.document = this.document.filter(character => !(character.type === 'EOF'))
+    this.elements = this.elements.filter(character => !(character.type === 'EOF'))
     return this
   }
 
   _addEndOfFileCharacter(): this {
-    this.document = [...this.document, this._createEndOfFile()]
+    this.elements = [...this.elements, this._createEndOfFile()]
     return this
   }
 
@@ -56,8 +56,8 @@ export default class BaseDocument {
     if (this.selection) this.backspace()
     
     this._handleEndOfFileCharacter()
-    this.document = insert(
-      this.document,
+    this.elements = insert(
+      this.elements,
       this.position,
       endOfLine ? this._createEndOfLine() : this._createCharacter({ text: key, styles })
     ) as Element[]
@@ -72,7 +72,7 @@ export default class BaseDocument {
   }
 
   cursorRight(): this {
-    if (this.position !== this.document.length - 1) this.position = this.position + 1
+    if (this.position !== this.elements.length - 1) this.position = this.position + 1
     return this
   }
 
@@ -81,7 +81,7 @@ export default class BaseDocument {
       Math.abs(
         selection.start -
         selection.end
-      ) > this.document.length
+      ) > this.elements.length
     ) throw new Error(`Invalid selection: ${JSON.stringify(selection)}`)
 
     let sortedSelection = selection
@@ -100,9 +100,9 @@ export default class BaseDocument {
     this._removeEndOfFileCharacter()
 
     const index = this.position
-    const lastIndex = index === this.document.length
-    this.document = remove(
-      this.document,
+    const lastIndex = index === this.elements.length
+    this.elements = remove(
+      this.elements,
       index - 1
     ) as Element[]
     this.cursorLeft()
@@ -117,20 +117,6 @@ export default class BaseDocument {
     } else {
       character.styles = [...character.styles, style]
     }
-  }
-
-  styleSelection({ style }: { style: string }): this {
-    if (this.selection) {
-      this.position = this.selection.start
-      while (
-        this.position !==
-        this.selection.end
-      ) {
-        this._toggleStyle({ character: this.document[this.position], style })
-        this.cursorRight()
-      }
-    }
-    return this
   }
 
   backspace(): this {
