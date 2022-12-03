@@ -1,6 +1,13 @@
 import { useEffect } from "react"
 
-const useHandleDocument = ({document, setDocument, activeStyles, toggleActiveStyles}) => {
+const useHandleDocument = ({
+  document, setDocument, 
+  activeStyles, toggleActiveStyles,
+  toggleBoldStyle,
+  toggleItalicStyle,
+  toggleUnderlinedStyle,
+  toggleStrikethroughStyle
+}) => {
   useEffect(() => {
     const mousedownHandler = () => {
       setDocument((prevDocument) => prevDocument.resetSelection())
@@ -12,23 +19,19 @@ const useHandleDocument = ({document, setDocument, activeStyles, toggleActiveSty
       if (e.metaKey) {
         switch (key) {
           case 'b':
-            setDocument((prevDocument) => prevDocument.styleSelection({ style: 'bold' }))
-            toggleActiveStyles('bold')
+            toggleBoldStyle()
             break;
           
           case 'i':
-            setDocument((prevDocument) => prevDocument.styleSelection({ style: 'italics' }))
-            toggleActiveStyles('italics')
+            toggleItalicStyle()
             break;
 
           case 'u':
-            setDocument((prevDocument) => prevDocument.styleSelection({ style: 'underlined' }))
-            toggleActiveStyles('underlined')
+            toggleUnderlinedStyle()
             break;
 
           case 'x':
-            setDocument((prevDocument) => prevDocument.styleSelection({ style: 'strikethrough' }))
-            toggleActiveStyles('strikethrough')
+            toggleStrikethroughStyle()
             break;
             
           case 'r':

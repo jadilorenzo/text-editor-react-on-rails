@@ -12,8 +12,7 @@
 }
 
 html {
-  /* font-family: Roboto, Arial, Helvetica, sans-serif; */
-  font-family: Roboto;
+  font-family: Roboto, Arial, Helvetica, sans-serif; 
 }
 
 html, body {
@@ -50,21 +49,18 @@ html, body {
   .editor-area {
     overflow: scroll;
     padding: 1rem;
-    height: calc(100vh - 13.5rem);
+    height: calc(100vh - 15rem);
 
     .editor {
       border-radius: 1rem;
       background: white !important;
       aspect-ratio: 8.5 / 11;
       width: 35rem;
-      padding: 1rem;
-      padding: calc(35rem / 8);
+      padding: calc(35rem / 5);
       margin: auto;
     }
   }
-  
 }
-
 
 .btn-text {
   background-color: rgba(200, 200, 200, 0.25);
@@ -76,6 +72,9 @@ html, body {
   font-size: 0.75rem;
   text-transform: uppercase;
   font-weight: bold;
+  display: flex;
+  justify-items: center;
+  align-items: center;
 }
 
 .btn-text__selected {
@@ -86,12 +85,49 @@ html, body {
   background-color: rgba(200, 200, 200, 0.5);
 }
 
+.btn-icon {
+  font-size: 1.25rem !important;
+  background-color: rgba(200, 200, 200, 0.25);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  .btn-icon__rounded {
+    border-radius: 100%;
+  }
+}
+
+.btn-icon:hover {
+  background-color: rgba(200, 200, 200, 0.5);
+}
+
+.btn-icon__selected {
+  background-color: rgba(200, 200, 200, 0.5);
+}
+
 .horizontal-btn-group {
   display: flex;
   gap: 0.75rem;
   overflow: scroll;
 }
 
+.combined-horizontal-button-group {
+  gap: 0;
+  border-radius: 0.25rem;
+
+  & > .btn-icon {
+    border-radius: 0;
+    border-left: 0.25px solid rgba(200, 200, 200, 0.75);
+  }
+
+  & > :first-child {
+    border-bottom-left-radius: 0.25rem;
+    border-top-left-radius: 0.25rem;
+    border: none;
+  }
+  & > :last-child {
+    border-bottom-right-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+  }
+}
 
 .header {
   padding: 1rem;
@@ -101,7 +137,7 @@ html, body {
 
   .logo {
     aspect-ratio: 1/1;
-    width: 2rem;
+    width: 1.5rem;
   }
   
   .text {
@@ -109,4 +145,8 @@ html, body {
     font-weight: bold;
     font-size: x-large;
   }
+}
+
+.profiler-results {
+  display: none !important;
 }

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import TextEditor from './components/TextEditor';
+import Document from './components/Document';
+import TextEditorProvider from './context/TextEditorContext';
 
 export default function ReactTextEditor() {
   return (
     <div>
-      <TextEditor/>
+      <TextEditorProvider>
+        <Document/>
+      </TextEditorProvider>
     </div>
   )
 }

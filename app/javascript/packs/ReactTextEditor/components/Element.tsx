@@ -15,7 +15,7 @@ const Element = ({ element }) => {
   return (
     <span style={{
       fontWeight: bold ? 'bold' : undefined,
-      textDecoration: underlined ? 'underlined' : strikethrough ? 'line-through' : undefined,
+      textDecoration: `${underlined ? 'underline' : ''} ${strikethrough ? 'line-through' : ''}`,
       fontStyle: italics ? 'italic' : undefined,
     }}>
       {element.text}
