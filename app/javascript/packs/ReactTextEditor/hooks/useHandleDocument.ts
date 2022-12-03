@@ -9,7 +9,7 @@ const useHandleDocument = ({
   toggleStrikethroughStyle
 }) => {
   useEffect(() => {
-    const mousedownHandler = () => {
+    const mouseupHandler = () => {
       setDocument((prevDocument) => prevDocument.resetSelection())
     }
 
@@ -73,11 +73,9 @@ const useHandleDocument = ({
       }
     }
 
-    window.addEventListener('mousedown', mousedownHandler)
     window.addEventListener('keydown', keydownHandler)
 
     return () => {
-      window.removeEventListener('mousedown', mousedownHandler)
       window.removeEventListener('keydown', keydownHandler)
     }
   }, [activeStyles])

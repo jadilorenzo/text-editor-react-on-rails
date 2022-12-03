@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { TextEditorContext } from '../context/TextEditorContext'
+import { TextEditorContext } from '../context/DocumentContext'
 import IconButton from '../ui/IconButton'
 
 const DocumentToolbar = () => {
@@ -8,34 +8,44 @@ const DocumentToolbar = () => {
     toggleBoldStyle,
     toggleItalicStyle,
     toggleUnderlinedStyle,
-    toggleStrikethroughStyle
+    toggleStrikethroughStyle,
+    createMathElement
   } = useContext(TextEditorContext)
   return (
-    <div className='menu-bar surface horizontal-button-group combined-horizontal-button-group'>
-      <IconButton 
-        active={activeStyles.includes('bold')} 
-        toggleActive={() => toggleBoldStyle()}
-      >
-        format_bold
-      </IconButton>
-      <IconButton 
-        active={activeStyles.includes('underlined')} 
-        toggleActive={() => toggleUnderlinedStyle()}
-      >
-        format_underlined
-      </IconButton>
-      <IconButton 
-        active={activeStyles.includes('italics')} 
-        toggleActive={() => toggleItalicStyle()}
-      >
-        format_italic
-      </IconButton>
-      <IconButton 
-        active={activeStyles.includes('strikethrough')} 
-        toggleActive={() => toggleStrikethroughStyle()}
-      >
-        format_strikethrough
-      </IconButton>
+    <div className='menu-bar surface'>
+      <div className="horizontal-btn-group">
+        <div className="combined-horizontal-btn-group">
+          <IconButton 
+            active={activeStyles.includes('bold')} 
+            toggleActive={() => toggleBoldStyle()}
+          >
+            format_bold
+          </IconButton>
+          <IconButton 
+            active={activeStyles.includes('underlined')} 
+            toggleActive={() => toggleUnderlinedStyle()}
+          >
+            format_underlined
+          </IconButton>
+          <IconButton 
+            active={activeStyles.includes('italics')} 
+            toggleActive={() => toggleItalicStyle()}
+          >
+            format_italic
+          </IconButton>
+          <IconButton 
+            active={activeStyles.includes('strikethrough')} 
+            toggleActive={() => toggleStrikethroughStyle()}
+          >
+            format_strikethrough
+          </IconButton>
+        </div>
+        <IconButton 
+            toggleActive={() => createMathElement()}
+        >
+          function
+        </IconButton>
+      </div>
     </div>
   )
 }

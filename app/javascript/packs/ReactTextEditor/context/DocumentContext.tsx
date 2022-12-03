@@ -50,6 +50,10 @@ const TextEditorProvider = (props: { children: any }) => {
     setDocument((prevDocument) => prevDocument.styleSelection({ style: 'strikethrough' }))
     toggleActiveStyles('strikethrough')
   } 
+
+  const createMathElement = () => {
+    setDocument((prevDocument) => prevDocument.createMathElement())
+  }
   
   useHandleDocument({ 
     document, setDocument, 
@@ -57,8 +61,10 @@ const TextEditorProvider = (props: { children: any }) => {
     toggleBoldStyle,
     toggleItalicStyle,
     toggleUnderlinedStyle,
-    toggleStrikethroughStyle
+    toggleStrikethroughStyle,
   })
+
+  // console.log(document)
 
   return (
     <TextEditorContext.Provider value={{
@@ -69,7 +75,8 @@ const TextEditorProvider = (props: { children: any }) => {
       toggleItalicStyle,
       toggleUnderlinedStyle,
       toggleStrikethroughStyle,
-      activeStyles
+      activeStyles,
+      createMathElement
     }}>
       {props.children}
     </TextEditorContext.Provider>

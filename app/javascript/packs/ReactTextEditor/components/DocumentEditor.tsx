@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { TextEditorContext } from '../context/TextEditorContext'
+import { TextEditorContext } from '../context/DocumentContext'
 import Character from './Character'
 import Cursor from './Cursor'
 

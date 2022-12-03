@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,8 +15,8 @@
 
   <body>
     <div class='header'>
-      <%= image_tag "OpenPen3.png", class: 'logo' %>
-      <div class='text'>Composify</div>
+      <%= image_tag "Compose.png", class: 'logo' %>
+      <div class='text'>Compose</div>
     </div>
     <%= yield %>
   </body>

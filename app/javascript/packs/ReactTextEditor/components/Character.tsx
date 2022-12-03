@@ -1,7 +1,8 @@
 import React, { useContext } from 'react'
-import {TextEditorContext} from '../context/TextEditorContext'
+import {TextEditorContext} from '../context/DocumentContext'
 import Cursor from './Cursor'
 import Element from './Element'
+import MathElement from './MathElement'
 
 const Character = ({
   index, 
@@ -29,7 +30,7 @@ const Character = ({
       setSelectionStartIndex(undefined)
     }
   }
-
+  
   return (
     <span 
       onMouseDown={onMouseDown} 
@@ -40,6 +41,8 @@ const Character = ({
       {document.position === index ? <Cursor/> : null}
       {(element.type === 'EOL') ? (
         <br/>
+      ) : (element.type === 'MATH') ?  (
+        <MathElement text={element.text} />
       ) : <Element element={element} />}
     </span>
   )
